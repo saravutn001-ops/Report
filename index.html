@@ -2,405 +2,135 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f4c81">
-  <title>รายงานจบการผลิต 1400</title>
+  <title>ProdClose 1400</title>
+  <script src="config.js"></script>
   <style>
-    :root {
-      --blue:#0f4c81;
-      --blue2:#1d6fa5;
-      --green:#15803d;
-      --red:#c62828;
-      --amber:#b45309;
-      --bg:#eef4f8;
-      --card:#ffffff;
-      --line:#d6e0e8;
-      --text:#17212b;
-      --muted:#607080;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin:0;
-      font-family: "Sukhumvit Set","Leelawadee UI","Noto Sans Thai",Arial,sans-serif;
-      background:linear-gradient(180deg,#dceaf4 0,#eef4f8 210px);
-      color:var(--text);
-    }
-    .wrap { max-width:760px; margin:0 auto; padding:14px 14px 42px; }
-    .hero {
-      color:#fff;
-      padding:20px 18px;
-      border-radius:18px;
-      background:linear-gradient(135deg,var(--blue),var(--blue2));
-      box-shadow:0 12px 28px rgba(15,76,129,.22);
-      margin-bottom:14px;
-    }
-    .hero h1 { margin:0 0 5px; font-size:24px; line-height:1.25; }
-    .hero p { margin:0; opacity:.9; font-size:14px; }
-    .card {
-      background:var(--card);
-      border:1px solid rgba(15,76,129,.12);
-      border-radius:16px;
-      box-shadow:0 5px 16px rgba(25,55,80,.08);
-      padding:16px;
-      margin-bottom:14px;
-    }
-    .section-title {
-      font-weight:800;
-      color:var(--blue);
-      margin:0 0 12px;
-      font-size:17px;
-    }
-    .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .full { grid-column:1 / -1; }
-    label { display:block; font-size:13px; color:var(--muted); margin:0 0 5px; font-weight:700; }
-    input, select, textarea {
-      width:100%;
-      border:1px solid var(--line);
-      border-radius:11px;
-      padding:11px 12px;
-      font:inherit;
-      font-size:16px;
-      color:var(--text);
-      background:#fff;
-      outline:none;
-      transition:.15s;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color:#4e92bd;
-      box-shadow:0 0 0 3px rgba(78,146,189,.16);
-    }
-    textarea { min-height:76px; resize:vertical; }
-    .hint { font-size:12px; color:var(--muted); margin-top:4px; }
-    .metrics {
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:9px;
-    }
-    .metric {
-      background:#f5f9fc;
-      border:1px solid #dde8ef;
-      border-radius:12px;
-      padding:10px;
-    }
-    .metric .k { font-size:12px; color:var(--muted); margin-bottom:2px; }
-    .metric .v { font-weight:800; font-size:17px; }
-    .status {
-      grid-column:1 / -1;
-      border-radius:12px;
-      padding:13px;
-      text-align:center;
-      font-weight:900;
-      font-size:18px;
-    }
-    .status.pass { color:#11642f; background:#e9f8ee; border:1px solid #bfe6cc; }
-    .status.fail { color:#a71d1d; background:#fdecec; border:1px solid #f3c0c0; }
-    .status.wait { color:#6b7280; background:#f3f4f6; border:1px solid #d9dde3; }
-    .preview {
-      white-space:pre-wrap;
-      background:#f8fafc;
-      border:1px dashed #aabac7;
-      border-radius:12px;
-      padding:13px;
-      min-height:180px;
-      font-size:14px;
-      line-height:1.6;
-    }
-    .actions {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
-    button {
-      border:0;
-      border-radius:12px;
-      padding:13px 14px;
-      font:inherit;
-      font-weight:800;
-      font-size:16px;
-      cursor:pointer;
-    }
-    .line { background:#06c755; color:#fff; grid-column:1 / -1; font-size:18px; }
-    .copy { background:#e8f1f7; color:var(--blue); }
-    .reset { background:#f3f4f6; color:#4b5563; }
-    .notice {
-      font-size:12px;
-      line-height:1.55;
-      color:var(--muted);
-      margin-top:10px;
-    }
-    .error {
-      display:none;
-      color:#a71d1d;
-      background:#fdecec;
-      border:1px solid #f3c0c0;
-      border-radius:10px;
-      padding:10px;
-      margin-bottom:12px;
-      font-size:14px;
-    }
-    .toast {
-      position:fixed;
-      left:50%;
-      bottom:24px;
-      transform:translateX(-50%) translateY(20px);
-      opacity:0;
-      background:#17212b;
-      color:#fff;
-      padding:10px 16px;
-      border-radius:999px;
-      transition:.2s;
-      pointer-events:none;
-      z-index:10;
-    }
-    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-    @media (max-width:560px) {
-      .grid { grid-template-columns:1fr; }
-      .full { grid-column:auto; }
-      .metrics { grid-template-columns:1fr 1fr; }
-      .hero h1 { font-size:21px; }
-    }
+    :root{--blue:#0f4c81;--blue2:#1d6fa5;--green:#15803d;--line:#d6e0e8;--text:#17212b;--muted:#607080;}
+    *{box-sizing:border-box} body{margin:0;font-family:"Sukhumvit Set","Leelawadee UI","Noto Sans Thai",Arial,sans-serif;background:linear-gradient(180deg,#dceaf4,#eef4f8 210px);color:var(--text)}
+    .wrap{max-width:760px;margin:auto;padding:14px 14px 44px} .hero{color:#fff;padding:19px;border-radius:18px;background:linear-gradient(135deg,var(--blue),var(--blue2));box-shadow:0 12px 28px #0f4c8138;margin-bottom:14px}
+    .hero-row{display:flex;justify-content:space-between;align-items:center;gap:10px} h1{font-size:24px;margin:0 0 5px} .hero p{margin:0;opacity:.9;font-size:14px}
+    .nav{color:#fff;text-decoration:none;font-weight:800;border:1px solid #ffffff80;border-radius:10px;padding:8px 11px;white-space:nowrap}
+    .card{background:#fff;border:1px solid #0f4c811f;border-radius:16px;box-shadow:0 5px 16px #19375014;padding:16px;margin-bottom:14px}
+    .title{font-weight:800;color:var(--blue);margin:0 0 12px;font-size:17px} .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} .full{grid-column:1/-1}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;font-weight:700} input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font:inherit;font-size:16px;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:#4e92bd;box-shadow:0 0 0 3px #4e92bd29} textarea{min-height:76px;resize:vertical} .hint{font-size:12px;color:var(--muted);margin-top:4px}
+    .metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px} .metric{background:#f5f9fc;border:1px solid #dde8ef;border-radius:12px;padding:10px} .k{font-size:12px;color:var(--muted)} .v{font-weight:800;font-size:17px}
+    .status{grid-column:1/-1;border-radius:12px;padding:13px;text-align:center;font-weight:900;font-size:18px} .pass{color:#11642f;background:#e9f8ee;border:1px solid #bfe6cc} .fail{color:#a71d1d;background:#fdecec;border:1px solid #f3c0c0} .wait{color:#6b7280;background:#f3f4f6;border:1px solid #d9dde3}
+    .preview{white-space:pre-wrap;background:#f8fafc;border:1px dashed #aabac7;border-radius:12px;padding:13px;min-height:180px;font-size:14px;line-height:1.6}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px} button{border:0;border-radius:12px;padding:13px 12px;font:inherit;font-weight:800;font-size:16px;cursor:pointer}
+    button:disabled{opacity:.55;cursor:not-allowed} .save{background:#0f4c81;color:#fff} .saveLine{background:#06c755;color:#fff;grid-column:1/-1;font-size:18px} .copy{background:#e8f1f7;color:#0f4c81} .reset{background:#f3f4f6;color:#4b5563}
+    .notice{font-size:12px;line-height:1.55;color:var(--muted);margin-top:10px} .error,.success{display:none;border-radius:10px;padding:10px;margin-bottom:12px;font-size:14px} .error{color:#a71d1d;background:#fdecec;border:1px solid #f3c0c0} .success{color:#11642f;background:#e9f8ee;border:1px solid #bfe6cc}
+    .pouch{display:inline-block;width:15px;height:18px;vertical-align:-3px;margin-right:3px} .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:#17212b;color:#fff;padding:10px 16px;border-radius:999px;transition:.2s;z-index:10} .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.hero h1{font-size:21px}}
   </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="hero">
-    <h1>รายงานจบการผลิต 1400</h1>
-    <p>กรอกข้อมูลการผลิต → ตรวจผล → กดส่งเข้า LINE</p>
-  </div>
+  <div class="hero"><div class="hero-row"><div><h1>ProdClose 1400</h1><p>บันทึกข้อมูล → Dashboard → ส่ง LINE</p></div><a class="nav" href="dashboard.html">Dashboard</a></div></div>
 
   <div class="card">
-    <h2 class="section-title">ข้อมูลการผลิต</h2>
-    <div id="error" class="error"></div>
-    <div class="grid">      <div class="full">
-        <label for="product">Product</label>
-        <select id="product"></select>
-        <div id="stdHint" class="hint"></div>
-      </div>
-
-      <div>
-        <label for="batch">Batch</label>
-        <input id="batch" type="text" placeholder="เช่น Batch 18">
-      </div>
-      <div>
-        <label for="batchCount">จำนวน Batch</label>
-        <input id="batchCount" type="number" min="0.1" step="0.1" inputmode="decimal" placeholder="เช่น 1">
-      </div>
-
-      <div>
-        <label for="qty">ยอดผลิต (ชิ้น)</label>
-        <input id="qty" type="number" min="0" step="1" inputmode="numeric" placeholder="เช่น 24500">
-      </div>
-      <div>
-        <label for="avgWeight">น้ำหนักเฉลี่ย</label>
-        <input id="avgWeight" type="number" min="0" step="0.001" inputmode="decimal" placeholder="เช่น 1.428 หรือ 1428">
-        <div class="hint">ใส่เป็น kg หรือกรัมก็ได้ ระบบตรวจหน่วยให้อัตโนมัติ</div>
-      </div>
-
-      <div>
-        <label for="pouchScrap">ซองเสีย (ใบ)</label>
-        <input id="pouchScrap" type="number" min="0" step="1" inputmode="numeric" value="0">
-      </div>
-      <div>
-        <label for="boxScrap">กล่องเสีย (ใบ)</label>
-        <input id="boxScrap" type="number" min="0" step="1" inputmode="numeric" value="0">
-      </div>
-
-      <div class="full">
-        <label for="remark">หมายเหตุ</label>
-        <textarea id="remark" placeholder="เช่น ซองเสียส่วนใหญ่เกิดช่วงต่อฟิล์ม"></textarea>
-      </div>
-
-      <div class="full">
-        <label for="reporter">ผู้รายงาน</label>
-        <input id="reporter" type="text" placeholder="ชื่อผู้รายงาน">
-      </div>
+    <h2 class="title">ข้อมูลการผลิต</h2>
+    <div id="error" class="error"></div><div id="success" class="success"></div>
+    <div class="grid">
+      <div class="full"><label>Product</label><select id="product"></select><div id="stdHint" class="hint"></div></div>
+      <div><label>Batch</label><input id="batch" placeholder="เช่น Batch 18"></div>
+      <div><label>จำนวน Batch</label><input id="batchCount" type="number" min=".1" step=".1" inputmode="decimal" placeholder="เช่น 1"></div>
+      <div><label>ยอดผลิต (ชิ้น)</label><input id="qty" type="number" min="0" step="1" inputmode="numeric" placeholder="เช่น 24500"></div>
+      <div><label>น้ำหนักเฉลี่ย</label><input id="avgWeight" type="number" min="0" step=".001" inputmode="decimal" placeholder="เช่น 1.428 หรือ 1428"><div class="hint">กรอกเป็น kg หรือกรัมก็ได้</div></div>
+      <div><label><svg class="pouch" viewBox="0 0 24 28" aria-hidden="true"><path fill="#1d6fa5" d="M5 1h12l2 4v19c0 2-1 3-3 3H6c-2 0-3-1-3-3V5l2-4zm2 3-1 2v17h10V6l-1-2H7zm2 5h5v2H9V9z"/></svg>ซองเสีย (ใบ)</label><input id="pouchScrap" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+      <div><label>📦 กล่องเสีย (ใบ)</label><input id="boxScrap" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+      <div class="full"><label>หมายเหตุ</label><textarea id="remark" placeholder="เช่น ซองเสียส่วนใหญ่เกิดช่วงต่อฟิล์ม"></textarea></div>
+      <div class="full"><label>ผู้รายงาน</label><input id="reporter" placeholder="ชื่อผู้รายงาน"></div>
     </div>
   </div>
 
-  <div class="card">
-    <h2 class="section-title">ผลคำนวณอัตโนมัติ</h2>
-    <div class="metrics">
-      <div class="metric"><div class="k">Bulk ตามสูตร</div><div class="v" id="bulkPlan">-</div></div>
-      <div class="metric"><div class="k">Bulk ตามยอดผลิตจริง</div><div class="v" id="bulkActual">-</div></div>
-      <div class="metric"><div class="k">ส่วนต่าง Bulk</div><div class="v" id="bulkDiff">-</div></div>
-      <div class="metric"><div class="k">% สูญเสีย</div><div class="v" id="lossPct">-</div></div>
-      <div id="status" class="status wait">รอกรอกข้อมูล</div>
-    </div>
-  </div>
+  <div class="card"><h2 class="title">ผลคำนวณอัตโนมัติ</h2><div class="metrics">
+    <div class="metric"><div class="k">Bulk ตามสูตร</div><div class="v" id="bulkPlan">-</div></div>
+    <div class="metric"><div class="k">Bulk ตามยอดผลิตจริง</div><div class="v" id="bulkActual">-</div></div>
+    <div class="metric"><div class="k">ส่วนต่าง Bulk</div><div class="v" id="bulkDiff">-</div></div>
+    <div class="metric"><div class="k">% สูญเสีย</div><div class="v" id="lossPct">-</div></div>
+    <div id="status" class="status wait">รอกรอกข้อมูล</div>
+  </div></div>
 
-  <div class="card">
-    <h2 class="section-title">ข้อความที่จะส่ง</h2>
-    <div id="preview" class="preview">กรอกข้อมูลเพื่อสร้างข้อความ</div>
+  <div class="card"><h2 class="title">ข้อความที่จะส่ง</h2><div id="preview" class="preview">กรอกข้อมูลเพื่อสร้างข้อความ</div>
     <div class="actions">
-      <button class="line" id="sendBtn" type="button">ส่งเข้ากลุ่ม LINE</button>
-      <button class="copy" id="copyBtn" type="button">คัดลอกข้อความ</button>
-      <button class="reset" id="resetBtn" type="button">ล้างข้อมูล</button>
+      <button id="saveBtn" class="save">บันทึกข้อมูล</button>
+      <button id="copyBtn" class="copy">คัดลอกข้อความ</button>
+      <button id="saveLineBtn" class="saveLine">บันทึกและส่งเข้า LINE</button>
+      <button id="resetBtn" class="reset">ล้างข้อมูล</button>
     </div>
-    <div class="notice">
-      ปุ่มส่งจะเปิดหน้าจอ “เลือกผู้รับ” ของ LINE จากนั้นเลือกกลุ่มและกดส่งได้ทันที
-      โดยไม่ต้องติดตั้งระบบ Bot หรือใช้ Token
-    </div>
+    <div class="notice">ระบบบันทึกวันและเวลาให้อัตโนมัติ โดยไม่ต้องมีช่องวันที่บนฟอร์ม</div>
   </div>
-</div>
-
-<div id="toast" class="toast">คัดลอกแล้ว</div>
+</div><div id="toast" class="toast"></div>
 
 <script>
-const products = [
-  {full:"Hygiene LD Expert Wash Lovely 1400", short:"Lovely", std:-0.005},
-  {full:"Hg-EPW Morning Fresh 1400", short:"Morning Fresh", std:-0.003},
-  {full:"Hg-LD EPW Forever Bloom 1400", short:"Forever Bloom", std:-0.003},
-  {full:"HG EPW Sunkiss Blooming 1400 NEW", short:"Sunkiss Blooming", std:-0.003},
-  {full:"HG EPW Love Touch 1400", short:"Love Touch", std:-0.003},
-  {full:"Hg-EPW Spring Magnolia 1400", short:"Spring Magnolia", std:-0.005},
-  {full:"Hg-EPW Sunrise Kiss 1400", short:"Sunrise Kiss", std:-0.005},
-  {full:"Hygiene LD EPW Peony Bloom 1400", short:"Peony Bloom", std:-0.005},
-  {full:"Hygiene LD EPW Milky Touch 1400", short:"Milky Touch", std:-0.003},
-  {full:"Hygiene LD EPW Happy Sunshine 1400", short:"Happy Sunshine", std:-0.01}
-];
-
-const ids = ["product","batch","batchCount","qty","avgWeight","pouchScrap","boxScrap","remark","reporter"];
+const products = [{"short": "Lovely", "full": "Hygiene LD Expert Wash Lovely 1400", "std": -0.005}, {"short": "Morning Fresh", "full": "Hg-EPW Morning Fresh 1400", "std": -0.003}, {"short": "Forever Bloom", "full": "Hg-LD EPW Forever Bloom 1400", "std": -0.003}, {"short": "Sunkiss Blooming", "full": "HG EPW Sunkiss Blooming 1400 NEW", "std": -0.003}, {"short": "Love Touch", "full": "HG EPW Love Touch 1400", "std": -0.003}, {"short": "Spring Magnolia", "full": "Hg-EPW Spring Magnolia 1400", "std": -0.005}, {"short": "Sunrise Kiss", "full": "Hg-EPW Sunrise Kiss 1400", "std": -0.005}, {"short": "Peony Bloom", "full": "Hygiene LD EPW Peony Bloom 1400", "std": -0.005}, {"short": "Milky Touch", "full": "Hygiene LD EPW Milky Touch 1400", "std": -0.003}, {"short": "Happy Sunshine", "full": "Hygiene LD EPW Happy Sunshine 1400", "std": -0.01}];
+const cfg = window.PRODCLOSE_CONFIG || {};
 const $ = id => document.getElementById(id);
-const productEl = $("product");
+const ids = ["product","batch","batchCount","qty","avgWeight","pouchScrap","boxScrap","remark","reporter"];
+$("product").innerHTML='<option value="">เลือก Product</option>'+products.map((p,i)=>`<option value="${i}">${p.short}</option>`).join("");
+$("reporter").value=localStorage.getItem("pc1400_reporter")||"";
 
-productEl.innerHTML = '<option value="">เลือก Product</option>' +
-  products.map((p,i)=>`<option value="${i}">${p.short}</option>`).join("");
+const num=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0};
+const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString("th-TH",{minimumFractionDigits:d,maximumFractionDigits:d}):"-";
+const pct=n=>Number.isFinite(n)?`${n>=0?"+":""}${(n*100).toFixed(3)}%`:"-";
+const product=()=>{const i=parseInt($("product").value,10);return Number.isInteger(i)?products[i]:null};
+const weightKg=()=>{const v=num("avgWeight");return v>10?v/1000:v};
 
-$("reporter").value = localStorage.getItem("reporter1400") || "";
-
-function n(id) {
-  const v = parseFloat($(id).value);
-  return Number.isFinite(v) ? v : 0;
+function validate(show=true){
+  const m=[]; if(!product())m.push("Product"); if(!$("batch").value.trim())m.push("Batch");
+  if(num("batchCount")<=0)m.push("จำนวน Batch"); if(num("qty")<=0)m.push("ยอดผลิต");
+  if(weightKg()<=0)m.push("น้ำหนักเฉลี่ย"); if(!$("reporter").value.trim())m.push("ผู้รายงาน");
+  if(show){$("error").style.display=m.length?"block":"none";$("error").textContent=m.length?"กรุณากรอก: "+m.join(", "):""}
+  return !m.length;
 }
-function fmt(n, d=2) {
-  return Number.isFinite(n) ? n.toLocaleString("th-TH",{minimumFractionDigits:d,maximumFractionDigits:d}) : "-";
+function calculation(){
+  const p=product(),bc=num("batchCount"),q=num("qty"),w=weightKg(),ps=num("pouchScrap"),bs=num("boxScrap");
+  const plan=bc>0?bc*35000:NaN,actual=q>0&&w>0?q*w:NaN,diff=Number.isFinite(plan)&&Number.isFinite(actual)?actual-plan:NaN,loss=Number.isFinite(diff)&&plan?diff/plan:NaN;
+  const pass=p&&Number.isFinite(loss)?loss>=p.std:null;
+  $("bulkPlan").textContent=Number.isFinite(plan)?fmt(plan)+" kg":"-"; $("bulkActual").textContent=Number.isFinite(actual)?fmt(actual)+" kg":"-";
+  $("bulkDiff").textContent=Number.isFinite(diff)?(diff>=0?"+":"")+fmt(diff)+" kg":"-"; $("lossPct").textContent=Number.isFinite(loss)?pct(loss):"-";
+  $("stdHint").textContent=p?"Standard สูญเสีย: "+pct(p.std):"";
+  $("status").className="status "+(pass===null?"wait":pass?"pass":"fail"); $("status").textContent=pass===null?"รอกรอกข้อมูล":pass?"✅ ผ่านมาตรฐาน":"🔴 เกินมาตรฐาน";
+  const pr=q?ps/q*10000:0,br=q?bs/q*10000:0,result=pass===null?"-":pass?"ผ่านมาตรฐาน":"เกินมาตรฐาน";
+  let msg="📊 รายงานจบการผลิต 1400\n";
+  msg+=`🏷 Product: ${p?p.short:"-"}\n📦 Batch: ${$("batch").value.trim()||"-"} | จำนวน Batch: ${bc||"-"}\n`;
+  msg+=`✅ ยอดผลิต: ${q?fmt(q,0):"-"} ชิ้น\n⚖️ น้ำหนักเฉลี่ย: ${w?fmt(w,3):"-"} kg/ชิ้น\n`;
+  msg+=`🧪 Bulk ตามสูตร: ${Number.isFinite(plan)?fmt(plan):"-"} kg\n💧 Bulk ตามยอดผลิตจริง: ${Number.isFinite(actual)?fmt(actual):"-"} kg\n`;
+  msg+=`📉 ส่วนต่าง Bulk: ${Number.isFinite(diff)?(diff>=0?"+":"")+fmt(diff):"-"} kg\n📌 % สูญเสีย: ${Number.isFinite(loss)?pct(loss):"-"} | Std: ${p?pct(p.std):"-"}\n`;
+  msg+=`🔎 ผล: ${result}\n🧴 ซองเสีย: ${fmt(ps,0)} ใบ (${fmt(pr,2)}/10,000 ชิ้น)\n📦 กล่องเสีย: ${fmt(bs,0)} ใบ (${fmt(br,2)}/10,000 ชิ้น)\n`;
+  if($("remark").value.trim())msg+=`📝 หมายเหตุ: ${$("remark").value.trim()}\n`;
+  msg+=`👤 ผู้รายงาน: ${$("reporter").value.trim()||"-"}`;
+  $("preview").textContent=msg;
+  return {p,bc,q,w,ps,bs,plan,actual,diff,loss,pass,pr,br,msg};
 }
-function pct(n) {
-  return Number.isFinite(n) ? `${n >= 0 ? "+" : ""}${(n*100).toFixed(3)}%` : "-";
+function apiReady(){return cfg.apiUrl&&cfg.apiUrl.includes("/exec")&&!cfg.apiUrl.includes("PASTE_")}
+function recordId(){return "PC1400-"+Date.now()+"-"+Math.random().toString(36).slice(2,7).toUpperCase()}
+function fingerprint(){return [product()?.short,$("batch").value,num("batchCount"),num("qty"),weightKg(),num("pouchScrap"),num("boxScrap"),$("reporter").value].join("|")}
+function showSuccess(t){$("success").textContent=t;$("success").style.display="block";$("error").style.display="none"}
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1600)}
+
+async function saveData(){
+  if(!validate(true))throw new Error("ข้อมูลไม่ครบ");
+  if(!apiReady()){$("error").textContent="ยังไม่ได้ตั้งค่า Apps Script URL ในไฟล์ config.js";$("error").style.display="block";throw new Error("API URL not configured")}
+  const calc=calculation(),fp=fingerprint(),old=localStorage.getItem("pc1400_last_fp");
+  if(old===fp&&localStorage.getItem("pc1400_last_id")){showSuccess("ข้อมูลชุดนี้บันทึกแล้ว: "+localStorage.getItem("pc1400_last_id"));return localStorage.getItem("pc1400_last_id")}
+  const rid=recordId();
+  const payload={recordId:rid,product:calc.p.short,batch:$("batch").value.trim(),batchCount:calc.bc,qty:calc.q,avgWeight:calc.w,pouchScrap:calc.ps,boxScrap:calc.bs,remark:$("remark").value.trim(),reporter:$("reporter").value.trim()};
+  $("saveBtn").disabled=true;$("saveLineBtn").disabled=true;
+  try{
+    await fetch(cfg.apiUrl,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+    localStorage.setItem("pc1400_reporter",payload.reporter);localStorage.setItem("pc1400_last_fp",fp);localStorage.setItem("pc1400_last_id",rid);
+    showSuccess("บันทึกข้อมูลแล้ว — Record ID: "+rid);return rid;
+  }finally{$("saveBtn").disabled=false;$("saveLineBtn").disabled=false}
 }
-function getProduct() {
-  const i = parseInt(productEl.value,10);
-  return Number.isInteger(i) ? products[i] : null;
-}
-function weightKg() {
-  const raw = n("avgWeight");
-  if(raw <= 0) return 0;
-  return raw > 10 ? raw / 1000 : raw;
-}
-function validate(show=true) {
-  const missing = [];
-  if(!getProduct()) missing.push("Product");
-  if(n("batchCount") <= 0) missing.push("จำนวน Batch");
-  if(n("qty") <= 0) missing.push("ยอดผลิต");
-  if(weightKg() <= 0) missing.push("น้ำหนักเฉลี่ย");
-  if(!$("reporter").value.trim()) missing.push("ผู้รายงาน");
-
-  if(show) {
-    const box = $("error");
-    if(missing.length) {
-      box.textContent = "กรุณากรอก: " + missing.join(", ");
-      box.style.display = "block";
-    } else {
-      box.style.display = "none";
-    }
-  }
-  return missing.length === 0;
-}
-function calculate() {
-  const p = getProduct();
-  const batchCount = n("batchCount");
-  const qty = n("qty");
-  const kg = weightKg();
-  const bulkPlan = batchCount > 0 ? batchCount * 35000 : NaN;
-  const bulkActual = qty > 0 && kg > 0 ? qty * kg : NaN;
-  const diff = Number.isFinite(bulkPlan) && Number.isFinite(bulkActual) ? bulkActual - bulkPlan : NaN;
-  const loss = Number.isFinite(diff) && bulkPlan ? diff / bulkPlan : NaN;
-  const pass = p && Number.isFinite(loss) ? loss >= p.std : null;
-
-  $("bulkPlan").textContent = Number.isFinite(bulkPlan) ? `${fmt(bulkPlan)} kg` : "-";
-  $("bulkActual").textContent = Number.isFinite(bulkActual) ? `${fmt(bulkActual)} kg` : "-";
-  $("bulkDiff").textContent = Number.isFinite(diff) ? `${diff>=0?"+":""}${fmt(diff)} kg` : "-";
-  $("lossPct").textContent = Number.isFinite(loss) ? pct(loss) : "-";
-  $("stdHint").textContent = p ? `Standard สูญเสีย: ${pct(p.std)}` : "";
-
-  const status = $("status");
-  status.className = "status " + (pass === null ? "wait" : pass ? "pass" : "fail");
-  status.textContent = pass === null ? "รอกรอกข้อมูล" : pass ? "✅ ผ่านมาตรฐาน" : "🔴 เกินมาตรฐาน";
-
-  const pouch = n("pouchScrap");
-  const box = n("boxScrap");
-  const pouchRate = qty > 0 ? pouch / qty * 10000 : 0;
-  const boxRate = qty > 0 ? box / qty * 10000 : 0;
-  const rawWeight = n("avgWeight");
-  const weightDisplay = kg > 0 ? `${fmt(kg,3)} kg/ชิ้น${rawWeight>10 ? ` (กรอก ${fmt(rawWeight,0)} g)` : ""}` : "-";
-  const result = pass === null ? "-" : pass ? "ผ่านมาตรฐาน" : "เกินมาตรฐาน";
-
-  let message = "📊 รายงานจบการผลิต 1400\n";
-  message += `🏷 Product: ${p ? p.short : "-"}\n`;
-  if($("batch").value.trim()) message += `📦 Batch: ${$("batch").value.trim()}\n`;
-  message += `🧪 จำนวน Batch: ${batchCount || "-"} × 35,000 kg\n`;
-  message += `✅ ยอดผลิต: ${qty ? fmt(qty,0) : "-"} ชิ้น\n`;
-  message += `⚖️ น้ำหนักเฉลี่ย: ${weightDisplay}\n`;
-  message += `💧 Bulk ตามสูตร: ${Number.isFinite(bulkPlan) ? fmt(bulkPlan) : "-"} kg\n`;
-  message += `💧 Bulk ตามยอดผลิตจริง: ${Number.isFinite(bulkActual) ? fmt(bulkActual) : "-"} kg\n`;
-  message += `📉 ส่วนต่าง Bulk: ${Number.isFinite(diff) ? (diff>=0?"+":"")+fmt(diff) : "-"} kg\n`;
-  message += `📌 % สูญเสีย: ${Number.isFinite(loss) ? pct(loss) : "-"} | Std: ${p ? pct(p.std) : "-"}\n`;
-  message += `🔎 ผล: ${result}\n`;
-  message += `✉️ ซองเสีย: ${fmt(pouch,0)} ใบ (${fmt(pouchRate,2)}/10,000 ชิ้น)\n`;
-  message += `📦 กล่องเสีย: ${fmt(box,0)} ใบ (${fmt(boxRate,2)}/10,000 ชิ้น)\n`;
-  if($("remark").value.trim()) message += `📝 หมายเหตุ: ${$("remark").value.trim()}\n`;
-  message += `👤 ผู้รายงาน: ${$("reporter").value.trim() || "-"}`;
-
-  $("preview").textContent = message;
-  return message;
-}
-function toast(text) {
-  const t = $("toast");
-  t.textContent = text;
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),1700);
-}
-
-ids.forEach(id => $(id).addEventListener("input", calculate));
-$("product").addEventListener("change", calculate);
-
-$("copyBtn").addEventListener("click", async () => {
-  if(!validate(true)) return;
-  const message = calculate();
-  try {
-    await navigator.clipboard.writeText(message);
-  } catch(e) {
-    const ta = document.createElement("textarea");
-    ta.value = message;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
-  }
-  localStorage.setItem("reporter1400", $("reporter").value.trim());
-  toast("คัดลอกข้อความแล้ว");
-});
-
-$("sendBtn").addEventListener("click", () => {
-  if(!validate(true)) return;
-  const message = calculate();
-  localStorage.setItem("reporter1400", $("reporter").value.trim());
-  window.location.href = "https://line.me/R/share?text=" + encodeURIComponent(message);
-});
-
-$("resetBtn").addEventListener("click", () => {
-  const reporter = $("reporter").value;
-  ids.forEach(id => {
-    if(id === "pouchScrap" || id === "boxScrap") $(id).value = "0";
-    else $(id).value = "";
-  });
-  $("reporter").value = reporter;
-  $("error").style.display = "none";
-  calculate();
-});
-
-calculate();
+ids.forEach(id=>$(id).addEventListener(id==="product"?"change":"input",()=>{$("success").style.display="none";calculation()}));
+$("saveBtn").onclick=async()=>{try{await saveData();toast("บันทึกข้อมูลแล้ว")}catch(e){}};
+$("saveLineBtn").onclick=async()=>{try{await saveData();location.href="https://line.me/R/share?text="+encodeURIComponent(calculation().msg)}catch(e){}};
+$("copyBtn").onclick=async()=>{if(!validate(true))return;const t=calculation().msg;try{await navigator.clipboard.writeText(t)}catch(e){const x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove()}toast("คัดลอกแล้ว")};
+$("resetBtn").onclick=()=>{const rep=$("reporter").value;ids.forEach(id=>$(id).value=(id==="pouchScrap"||id==="boxScrap")?"0":"");$("reporter").value=rep;localStorage.removeItem("pc1400_last_fp");localStorage.removeItem("pc1400_last_id");$("success").style.display="none";calculation()};
+calculation();
 </script>
-</body>
-</html>
+</body></html>
