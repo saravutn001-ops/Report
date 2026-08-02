@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f4c81"><title>ProdClose 1400 Dashboard</title><script src="config.js"></script>
+<style>
+:root{--blue:#0f4c81;--green:#15803d;--red:#b91c1c;--muted:#64748b}*{box-sizing:border-box}body{margin:0;font-family:"Sukhumvit Set","Leelawadee UI","Noto Sans Thai",Arial,sans-serif;background:#eef4f8;color:#17212b}
+.wrap{max-width:1180px;margin:auto;padding:14px 14px 50px}header{background:linear-gradient(135deg,#0f4c81,#1d6fa5);color:white;border-radius:18px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:10px}h1{margin:0;font-size:24px}header p{margin:4px 0 0;opacity:.85}.back{color:#fff;text-decoration:none;font-weight:800;border:1px solid #ffffff80;border-radius:10px;padding:9px 12px}
+.card{background:#fff;border-radius:15px;border:1px solid #dbe5ec;box-shadow:0 4px 14px #1e3a5f10;padding:15px;margin-top:14px}.filters{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}label{font-size:13px;font-weight:800;color:var(--muted);display:block;margin-bottom:5px}input,select,button{width:100%;padding:11px;border:1px solid #cfdbe4;border-radius:10px;font:inherit;font-size:15px}button{background:#0f4c81;color:#fff;font-weight:800;cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.kpi{background:#fff;border-radius:14px;border:1px solid #dbe5ec;padding:13px}.kpi .l{font-size:12px;color:var(--muted)}.kpi .n{font-weight:900;font-size:22px;margin-top:3px}.good{color:var(--green)}.bad{color:var(--red)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}h2{color:#0f4c81;font-size:17px;margin:0 0 12px}.bars{display:grid;gap:9px}.barrow{display:grid;grid-template-columns:135px 1fr 75px;gap:8px;align-items:center;font-size:13px}.track{height:16px;background:#edf2f6;border-radius:99px;overflow:hidden;position:relative}.fill{height:100%;border-radius:99px;background:#1d6fa5}.fill.neg{background:#dc2626}.svgbox{width:100%;height:260px;border:1px solid #e2e8f0;border-radius:12px;background:#fbfdff}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#eaf2f8;color:#0f4c81;position:sticky;top:0}.tablewrap{overflow:auto;max-height:420px}.pill{display:inline-block;padding:3px 8px;border-radius:99px;font-weight:800}.pill.pass{background:#dcfce7;color:#166534}.pill.fail{background:#fee2e2;color:#b91c1c}.msg{padding:12px;border-radius:10px;background:#fff7d6;color:#7c5a00;display:none;margin-top:14px}
+@media(max-width:800px){.kpis{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.barrow{grid-template-columns:105px 1fr 65px}}
+</style></head><body><div class="wrap">
+<header><div><h1>ProdClose 1400 Dashboard</h1><p>สรุปจากข้อมูล Google Sheets</p></div><a class="back" href="index.html">กลับหน้ากรอก</a></header>
+<div id="msg" class="msg"></div>
+<div class="card filters"><div><label>เดือน</label><input id="month" type="month"></div><div><label>Product</label><select id="product"><option>ทั้งหมด</option></select></div><button id="load">โหลดข้อมูล</button></div>
+<div class="kpis">
+<div class="kpi"><div class="l">จำนวนรายการ</div><div class="n" id="entries">0</div></div>
+<div class="kpi"><div class="l">ยอดผลิตรวม</div><div class="n" id="qty">0</div></div>
+<div class="kpi"><div class="l">% สูญเสียรวม</div><div class="n" id="loss">0%</div></div>
+<div class="kpi"><div class="l">Pass Rate</div><div class="n" id="passRate">0%</div></div>
+<div class="kpi"><div class="l">Bulk ส่วนต่าง</div><div class="n" id="diff">0 kg</div></div>
+<div class="kpi"><div class="l">ซองเสีย/10,000</div><div class="n" id="pouch">0</div></div>
+<div class="kpi"><div class="l">กล่องเสีย/10,000</div><div class="n" id="box">0</div></div>
+<div class="kpi"><div class="l">ผ่าน / เกินมาตรฐาน</div><div class="n" id="pf">0 / 0</div></div>
+</div>
+<div class="two">
+<div class="card"><h2>% สูญเสียแยก Product</h2><div id="bars" class="bars"></div></div>
+<div class="card"><h2>แนวโน้ม % สูญเสียรายวัน</h2><svg id="trend" class="svgbox" viewBox="0 0 700 260" preserveAspectRatio="none"></svg></div>
+</div>
+<div class="card"><h2>รายการล่าสุด</h2><div class="tablewrap"><table><thead><tr><th>เวลา</th><th>Product</th><th>Batch</th><th>ยอดผลิต</th><th>% สูญเสีย</th><th>ผล</th><th>ผู้รายงาน</th></tr></thead><tbody id="recent"></tbody></table></div></div>
+</div>
+<script>
+const cfg=window.PRODCLOSE_CONFIG||{},$=id=>document.getElementById(id);
+const fmt=(n,d=0)=>Number(n||0).toLocaleString("th-TH",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=n=>`${Number(n||0)>=0?"+":""}${(Number(n||0)*100).toFixed(3)}%`;
+const now=new Date();$("month").value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+function alertMsg(t){$("msg").textContent=t;$("msg").style.display="block"}
+function jsonp(url){return new Promise((resolve,reject)=>{const cb="pcCb_"+Date.now()+"_"+Math.random().toString(36).slice(2);window[cb]=d=>{resolve(d);delete window[cb];s.remove()};const s=document.createElement("script");s.src=url+(url.includes("?")?"&":"?")+"callback="+cb;s.onerror=()=>{reject(new Error("โหลดข้อมูลไม่ได้"));delete window[cb];s.remove()};document.body.appendChild(s)})}
+function drawTrend(rows){
+ const svg=$("trend"),W=700,H=260,pad=35;svg.innerHTML=""; if(!rows.length){svg.innerHTML='<text x="350" y="135" text-anchor="middle" fill="#64748b">ยังไม่มีข้อมูล</text>';return}
+ const vals=rows.map(x=>Number(x.lossPct||0)),min=Math.min(...vals,-.01),max=Math.max(...vals,.005),span=max-min||1;
+ const pts=rows.map((r,i)=>{const x=pad+(W-pad*2)*(i/Math.max(rows.length-1,1)),y=H-pad-(H-pad*2)*((Number(r.lossPct)-min)/span);return [x,y]});
+ const line=document.createElementNS("http://www.w3.org/2000/svg","polyline");line.setAttribute("points",pts.map(p=>p.join(",")).join(" "));line.setAttribute("fill","none");line.setAttribute("stroke","#1d6fa5");line.setAttribute("stroke-width","3");svg.appendChild(line);
+ pts.forEach((p,i)=>{const c=document.createElementNS("http://www.w3.org/2000/svg","circle");c.setAttribute("cx",p[0]);c.setAttribute("cy",p[1]);c.setAttribute("r","4");c.setAttribute("fill",vals[i]<0?"#dc2626":"#15803d");svg.appendChild(c)});
+ const zeroY=H-pad-(H-pad*2)*((0-min)/span);const zero=document.createElementNS("http://www.w3.org/2000/svg","line");zero.setAttribute("x1",pad);zero.setAttribute("x2",W-pad);zero.setAttribute("y1",zeroY);zero.setAttribute("y2",zeroY);zero.setAttribute("stroke","#94a3b8");zero.setAttribute("stroke-dasharray","5 5");svg.appendChild(zero);
+}
+function render(d){
+ $("msg").style.display="none"; const s=d.summary||{};
+ $("entries").textContent=fmt(s.entries);$("qty").textContent=fmt(s.qty);$("loss").textContent=pct(s.lossPct);$("passRate").textContent=(Number(s.passRate||0)*100).toFixed(1)+"%";
+ $("diff").textContent=(Number(s.bulkDiff||0)>=0?"+":"")+fmt(s.bulkDiff,2)+" kg";$("pouch").textContent=fmt(s.pouchRate,2);$("box").textContent=fmt(s.boxRate,2);$("pf").textContent=fmt(s.pass)+" / "+fmt(s.fail);
+ $("loss").className="n "+(s.lossPct<0?"bad":"good");$("diff").className="n "+(s.bulkDiff<0?"bad":"good");
+ const rows=d.byProduct||[],mx=Math.max(...rows.map(x=>Math.abs(Number(x.lossPct||0))),.001);
+ $("bars").innerHTML=rows.length?rows.map(x=>`<div class="barrow"><div>${x.product}</div><div class="track"><div class="fill ${x.lossPct<0?"neg":""}" style="width:${Math.max(2,Math.abs(x.lossPct)/mx*100)}%"></div></div><b class="${x.lossPct<0?"bad":"good"}">${pct(x.lossPct)}</b></div>`).join(""):"ยังไม่มีข้อมูล";
+ drawTrend(d.daily||[]);
+ $("recent").innerHTML=(d.recent||[]).map(x=>`<tr><td>${x.timestamp}</td><td>${x.product}</td><td>${x.batch}</td><td>${fmt(x.qty)}</td><td>${pct(x.lossPct)}</td><td><span class="pill ${x.result==="ผ่าน"?"pass":"fail"}">${x.result}</span></td><td>${x.reporter}</td></tr>`).join("");
+ if(d.products){$("product").innerHTML='<option>ทั้งหมด</option>'+d.products.map(p=>`<option>${p}</option>`).join("")}
+}
+async function load(){
+ if(!cfg.apiUrl||!cfg.apiUrl.includes("/exec")||cfg.apiUrl.includes("PASTE_")){alertMsg("ยังไม่ได้ตั้งค่า Apps Script URL ใน config.js");return}
+ $("load").disabled=true;$("load").textContent="กำลังโหลด...";
+ try{const u=cfg.apiUrl+"?action=dashboard&month="+encodeURIComponent($("month").value)+"&product="+encodeURIComponent($("product").value);const d=await jsonp(u);if(!d.ok)throw new Error(d.error||"โหลดข้อมูลไม่ได้");render(d)}catch(e){alertMsg(e.message)}finally{$("load").disabled=false;$("load").textContent="โหลดข้อมูล"}
+}
+$("load").onclick=load;$("month").onchange=load;$("product").onchange=load;load();
+</script></body></html>
