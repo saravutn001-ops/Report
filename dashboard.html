@@ -19,8 +19,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;borde
 <div class="kpi"><div class="l">% สูญเสียรวม</div><div class="n" id="loss">0%</div></div>
 <div class="kpi"><div class="l">Pass Rate</div><div class="n" id="passRate">0%</div></div>
 <div class="kpi"><div class="l">Bulk ส่วนต่าง</div><div class="n" id="diff">0 kg</div></div>
-<div class="kpi"><div class="l">ซองเสีย/10,000</div><div class="n" id="pouch">0</div></div>
-<div class="kpi"><div class="l">กล่องเสีย/10,000</div><div class="n" id="box">0</div></div>
+<div class="kpi"><div class="l">% ซองเสีย</div><div class="n" id="pouch">0</div></div>
+<div class="kpi"><div class="l">% กล่องเสีย</div><div class="n" id="box">0</div></div>
 <div class="kpi"><div class="l">ผ่าน / เกินมาตรฐาน</div><div class="n" id="pf">0 / 0</div></div>
 </div>
 <div class="two">
@@ -47,7 +47,7 @@ function drawTrend(rows){
 function render(d){
  $("msg").style.display="none"; const s=d.summary||{};
  $("entries").textContent=fmt(s.entries);$("qty").textContent=fmt(s.qty);$("loss").textContent=pct(s.lossPct);$("passRate").textContent=(Number(s.passRate||0)*100).toFixed(1)+"%";
- $("diff").textContent=(Number(s.bulkDiff||0)>=0?"+":"")+fmt(s.bulkDiff,2)+" kg";$("pouch").textContent=fmt(s.pouchRate,2);$("box").textContent=fmt(s.boxRate,2);$("pf").textContent=fmt(s.pass)+" / "+fmt(s.fail);
+ $("diff").textContent=(Number(s.bulkDiff||0)>=0?"+":"")+fmt(s.bulkDiff,2)+" kg";$("pouch").textContent=(Number(s.pouchRate||0)*100).toFixed(3)+"%";$("box").textContent=(Number(s.boxRate||0)*100).toFixed(3)+"%";$("pf").textContent=fmt(s.pass)+" / "+fmt(s.fail);
  $("loss").className="n "+(s.lossPct<0?"bad":"good");$("diff").className="n "+(s.bulkDiff<0?"bad":"good");
  const rows=d.byProduct||[],mx=Math.max(...rows.map(x=>Math.abs(Number(x.lossPct||0))),.001);
  $("bars").innerHTML=rows.length?rows.map(x=>`<div class="barrow"><div>${x.product}</div><div class="track"><div class="fill ${x.lossPct<0?"neg":""}" style="width:${Math.max(2,Math.abs(x.lossPct)/mx*100)}%"></div></div><b class="${x.lossPct<0?"bad":"good"}">${pct(x.lossPct)}</b></div>`).join(""):"ยังไม่มีข้อมูล";

@@ -66,7 +66,7 @@
 </div><div id="toast" class="toast"></div>
 
 <script>
-const products = [{"short": "Lovely", "full": "Hygiene LD Expert Wash Lovely 1400", "std": -0.004}, {"short": "Morning Fresh", "full": "Hg-EPW Morning Fresh 1400", "std": -0.004}, {"short": "Forever Bloom", "full": "Hg-LD EPW Forever Bloom 1400", "std": -0.004}, {"short": "Sunkiss Blooming", "full": "HG EPW Sunkiss Blooming 1400 NEW", "std": -0.004}, {"short": "Love Touch", "full": "HG EPW Love Touch 1400", "std": -0.004}, {"short": "Spring Magnolia", "full": "Hg-EPW Spring Magnolia 1400", "std": -0.004}, {"short": "Sunrise Kiss", "full": "Hg-EPW Sunrise Kiss 1400", "std": -0.004}, {"short": "Peony Bloom", "full": "Hygiene LD EPW Peony Bloom 1400", "std": -0.004}, {"short": "Milky Touch", "full": "Hygiene LD EPW Milky Touch 1400", "std": -0.004}, {"short": "Happy Sunshine", "full": "Hygiene LD EPW Happy Sunshine 1400", "std": -0.004}];
+const products = [{"short": "Lovely", "full": "Hygiene LD Expert Wash Lovely 1400", "std": -0.005}, {"short": "Morning Fresh", "full": "Hg-EPW Morning Fresh 1400", "std": -0.003}, {"short": "Forever Bloom", "full": "Hg-LD EPW Forever Bloom 1400", "std": -0.003}, {"short": "Sunkiss Blooming", "full": "HG EPW Sunkiss Blooming 1400 NEW", "std": -0.003}, {"short": "Love Touch", "full": "HG EPW Love Touch 1400", "std": -0.003}, {"short": "Spring Magnolia", "full": "Hg-EPW Spring Magnolia 1400", "std": -0.005}, {"short": "Sunrise Kiss", "full": "Hg-EPW Sunrise Kiss 1400", "std": -0.005}, {"short": "Peony Bloom", "full": "Hygiene LD EPW Peony Bloom 1400", "std": -0.005}, {"short": "Milky Touch", "full": "Hygiene LD EPW Milky Touch 1400", "std": -0.003}, {"short": "Happy Sunshine", "full": "Hygiene LD EPW Happy Sunshine 1400", "std": -0.01}];
 const cfg = window.PRODCLOSE_CONFIG || {};
 const $ = id => document.getElementById(id);
 const ids = ["product","batch","batchCount","qty","avgWeight","pouchScrap","boxScrap","remark","reporter"];
@@ -94,13 +94,13 @@ function calculation(){
   $("bulkDiff").textContent=Number.isFinite(diff)?(diff>=0?"+":"")+fmt(diff)+" kg":"-"; $("lossPct").textContent=Number.isFinite(loss)?pct(loss):"-";
   $("stdHint").textContent=p?"Standard สูญเสีย: "+pct(p.std):"";
   $("status").className="status "+(pass===null?"wait":pass?"pass":"fail"); $("status").textContent=pass===null?"รอกรอกข้อมูล":pass?"✅ ผ่านมาตรฐาน":"🔴 เกินมาตรฐาน";
-  const pr=q?ps/q*10000:0,br=q?bs/q*10000:0,result=pass===null?"-":pass?"ผ่านมาตรฐาน":"เกินมาตรฐาน";
+  const pr=q?ps/q:0,br=q?bs/(q/8):0,result=pass===null?"-":pass?"ผ่านมาตรฐาน":"เกินมาตรฐาน";
   let msg="📊 รายงานจบการผลิต 1400\n";
   msg+=`🏷 Product: ${p?p.short:"-"}\n📦 Batch: ${$("batch").value.trim()||"-"} | จำนวน Batch: ${bc||"-"}\n`;
   msg+=`✅ ยอดผลิต: ${q?fmt(q,0):"-"} ชิ้น\n⚖️ น้ำหนักเฉลี่ย: ${w?fmt(w,3):"-"} kg/ชิ้น\n`;
   msg+=`🧪 Bulk ตามสูตร: ${Number.isFinite(plan)?fmt(plan):"-"} kg\n💧 Bulk ตามยอดผลิตจริง: ${Number.isFinite(actual)?fmt(actual):"-"} kg\n`;
   msg+=`📉 ส่วนต่าง Bulk: ${Number.isFinite(diff)?(diff>=0?"+":"")+fmt(diff):"-"} kg\n📌 % สูญเสีย: ${Number.isFinite(loss)?pct(loss):"-"} | Std: ${p?pct(p.std):"-"}\n`;
-  msg+=`🔎 ผล: ${result}\n🧴 ซองเสีย: ${fmt(ps,0)} ใบ (${fmt(pr,2)}/10,000 ชิ้น)\n📦 กล่องเสีย: ${fmt(bs,0)} ใบ (${fmt(br,2)}/10,000 ชิ้น)\n`;
+  msg+=`🔎 ผล: ${result}\n🧴 ซองเสีย: ${fmt(ps,0)} ใบ (${(pr*100).toFixed(3)}%)\n📦 กล่องเสีย: ${fmt(bs,0)} ใบ (${(br*100).toFixed(3)}%)\n`;
   if($("remark").value.trim())msg+=`📝 หมายเหตุ: ${$("remark").value.trim()}\n`;
   msg+=`👤 ผู้รายงาน: ${$("reporter").value.trim()||"-"}`;
   $("preview").textContent=msg;
