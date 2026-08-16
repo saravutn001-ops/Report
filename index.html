@@ -22,8 +22,9 @@
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px} button{border:0;border-radius:12px;padding:13px 12px;font:inherit;font-weight:800;font-size:16px;cursor:pointer}
     button:disabled{opacity:.55;cursor:not-allowed} .save{background:#0f4c81;color:#fff} .saveLine{background:#06c755;color:#fff;grid-column:1/-1;font-size:18px} .copy{background:#e8f1f7;color:#0f4c81} .reset{background:#f3f4f6;color:#4b5563}
     .notice{font-size:12px;line-height:1.55;color:var(--muted);margin-top:10px} .error,.success{display:none;border-radius:10px;padding:10px;margin-bottom:12px;font-size:14px} .error{color:#a71d1d;background:#fdecec;border:1px solid #f3c0c0} .success{color:#11642f;background:#e9f8ee;border:1px solid #bfe6cc}
+    .batchRows{display:grid;gap:9px}.batchRow{display:grid;grid-template-columns:42px 1fr 1fr 42px;gap:8px;align-items:end;padding:10px;border:1px solid #dce5eb;border-radius:12px;background:#f8fbfd}.batchIndex{font-weight:900;color:var(--blue);text-align:center;padding-bottom:11px}.batchField label{font-size:11px;margin-bottom:4px}.removeBatch{background:#fee2e2;color:#b91c1c;padding:10px 0;border-radius:10px}.addBatch{margin-top:9px;background:#e8f1f7;color:#0f4c81;width:100%}
     .pouch{display:inline-block;width:15px;height:18px;vertical-align:-3px;margin-right:3px} .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:#17212b;color:#fff;padding:10px 16px;border-radius:999px;transition:.2s;z-index:10} .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(max-width:560px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.hero h1{font-size:21px}}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.hero h1{font-size:21px}.batchRow{grid-template-columns:32px 1fr 1fr 36px;padding:8px}.batchIndex{font-size:13px}}
   </style>
 </head>
 <body>
@@ -35,8 +36,12 @@
     <div id="error" class="error"></div><div id="success" class="success"></div>
     <div class="grid">
       <div class="full"><label>Product</label><select id="product"></select><div id="stdHint" class="hint"></div></div>
-      <div><label>Batch</label><input id="batch" placeholder="เช่น Batch 18"></div>
-      <div><label>จำนวน Batch</label><input id="batchCount" type="number" min=".1" step=".1" inputmode="decimal" placeholder="เช่น 1"></div>
+      <div class="full">
+        <label>Batch / Mix Tank No.</label>
+        <div id="batchRows" class="batchRows"></div>
+        <button type="button" id="addBatchBtn" class="addBatch">＋ เพิ่ม Batch</button>
+        <div class="hint">ใส่ 1 แถวต่อ 1 Batch เพื่อระบุว่า Batch ไหนมาจาก Mix Tank ใด</div>
+      </div>
       <div><label>ยอดผลิต (ชิ้น)</label><input id="qty" type="number" min="0" step="1" inputmode="numeric" placeholder="เช่น 24500"></div>
       <div><label>น้ำหนักเฉลี่ย</label><input id="avgWeight" type="number" min="0" step=".001" inputmode="decimal" placeholder="เช่น 1.428 หรือ 1428"><div class="hint">กรอกเป็น kg หรือกรัมก็ได้</div></div>
       <div><label><svg class="pouch" viewBox="0 0 24 28" aria-hidden="true"><path fill="#1d6fa5" d="M5 1h12l2 4v19c0 2-1 3-3 3H6c-2 0-3-1-3-3V5l2-4zm2 3-1 2v17h10V6l-1-2H7zm2 5h5v2H9V9z"/></svg>ซองเสีย (ใบ)</label><input id="pouchScrap" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
@@ -66,10 +71,10 @@
 </div><div id="toast" class="toast"></div>
 
 <script>
-const products = [{"short": "Lovely", "full": "Hygiene LD Expert Wash Lovely 1400", "std": -0.004}, {"short": "Morning Fresh", "full": "Hg-EPW Morning Fresh 1400", "std": -0.004}, {"short": "Forever Bloom", "full": "Hg-LD EPW Forever Bloom 1400", "std": -0.004}, {"short": "Sunkiss Blooming", "full": "HG EPW Sunkiss Blooming 1400 NEW", "std": -0.004}, {"short": "Love Touch", "full": "HG EPW Love Touch 1400", "std": -0.004}, {"short": "Spring Magnolia", "full": "Hg-EPW Spring Magnolia 1400", "std": -0.004}, {"short": "Sunrise Kiss", "full": "Hg-EPW Sunrise Kiss 1400", "std": -0.004}, {"short": "Peony Bloom", "full": "Hygiene LD EPW Peony Bloom 1400", "std": -0.004}, {"short": "Milky Touch", "full": "Hygiene LD EPW Milky Touch 1400", "std": -0.004}, {"short": "Happy Sunshine", "full": "Hygiene LD EPW Happy Sunshine 1400", "std": -0.004}];
+const products = [{"short": "Lovely", "full": "Hygiene LD Expert Wash Lovely 1400", "std": -0.005}, {"short": "Morning Fresh", "full": "Hg-EPW Morning Fresh 1400", "std": -0.003}, {"short": "Forever Bloom", "full": "Hg-LD EPW Forever Bloom 1400", "std": -0.003}, {"short": "Sunkiss Blooming", "full": "HG EPW Sunkiss Blooming 1400 NEW", "std": -0.003}, {"short": "Love Touch", "full": "HG EPW Love Touch 1400", "std": -0.003}, {"short": "Spring Magnolia", "full": "Hg-EPW Spring Magnolia 1400", "std": -0.005}, {"short": "Sunrise Kiss", "full": "Hg-EPW Sunrise Kiss 1400", "std": -0.005}, {"short": "Peony Bloom", "full": "Hygiene LD EPW Peony Bloom 1400", "std": -0.005}, {"short": "Milky Touch", "full": "Hygiene LD EPW Milky Touch 1400", "std": -0.003}, {"short": "Happy Sunshine", "full": "Hygiene LD EPW Happy Sunshine 1400", "std": -0.01}];
 const cfg = window.PRODCLOSE_CONFIG || {};
 const $ = id => document.getElementById(id);
-const ids = ["product","batch","batchCount","qty","avgWeight","pouchScrap","boxScrap","remark","reporter"];
+const ids = ["product","qty","avgWeight","pouchScrap","boxScrap","remark","reporter"];
 $("product").innerHTML='<option value="">เลือก Product</option>'+products.map((p,i)=>`<option value="${i}">${p.short}</option>`).join("");
 $("reporter").value=localStorage.getItem("pc1400_reporter")||"";
 
@@ -79,15 +84,45 @@ const pct=n=>Number.isFinite(n)?`${n>=0?"+":""}${(n*100).toFixed(3)}%`:"-";
 const product=()=>{const i=parseInt($("product").value,10);return Number.isInteger(i)?products[i]:null};
 const weightKg=()=>{const v=num("avgWeight");return v>10?v/1000:v};
 
+function addBatchRow(batchNo="",mixTankNo=""){
+  const row=document.createElement("div");
+  row.className="batchRow";
+  row.innerHTML=`<div class="batchIndex"></div>
+    <div class="batchField"><label>Batch No.</label><input class="batchNo" placeholder="เช่น B260816-01" value="${String(batchNo).replace(/"/g,"&quot;")}"></div>
+    <div class="batchField"><label>Mix Tank No.</label><input class="mixTankNo" placeholder="เช่น MT-01" value="${String(mixTankNo).replace(/"/g,"&quot;")}"></div>
+    <button type="button" class="removeBatch" title="ลบ Batch">×</button>`;
+  $("batchRows").appendChild(row);
+  row.querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{$("success").style.display="none";calculation()}));
+  row.querySelector(".removeBatch").onclick=()=>{if(document.querySelectorAll(".batchRow").length>1){row.remove();refreshBatchRows();calculation();}};
+  refreshBatchRows();
+}
+function refreshBatchRows(){
+  const rows=[...document.querySelectorAll(".batchRow")];
+  rows.forEach((row,i)=>{
+    row.querySelector(".batchIndex").textContent=i+1;
+    row.querySelector(".removeBatch").style.visibility=rows.length>1?"visible":"hidden";
+  });
+}
+function getBatches(){
+  return [...document.querySelectorAll(".batchRow")].map(row=>({
+    batchNo:row.querySelector(".batchNo").value.trim(),
+    mixTankNo:row.querySelector(".mixTankNo").value.trim()
+  }));
+}
+
 function validate(show=true){
-  const m=[]; if(!product())m.push("Product"); if(!$("batch").value.trim())m.push("Batch");
-  if(num("batchCount")<=0)m.push("จำนวน Batch"); if(num("qty")<=0)m.push("ยอดผลิต");
-  if(weightKg()<=0)m.push("น้ำหนักเฉลี่ย"); if(!$("reporter").value.trim())m.push("ผู้รายงาน");
+  const m=[],batches=getBatches();
+  if(!product())m.push("Product");
+  if(!batches.length)m.push("Batch");
+  else if(batches.some(b=>!b.batchNo||!b.mixTankNo))m.push("Batch / Mix Tank ให้ครบทุกแถว");
+  if(num("qty")<=0)m.push("ยอดผลิต");
+  if(weightKg()<=0)m.push("น้ำหนักเฉลี่ย");
+  if(!$("reporter").value.trim())m.push("ผู้รายงาน");
   if(show){$("error").style.display=m.length?"block":"none";$("error").textContent=m.length?"กรุณากรอก: "+m.join(", "):""}
   return !m.length;
 }
 function calculation(){
-  const p=product(),bc=num("batchCount"),q=num("qty"),w=weightKg(),ps=num("pouchScrap"),bs=num("boxScrap");
+  const p=product(),batches=getBatches(),bc=batches.length,q=num("qty"),w=weightKg(),ps=num("pouchScrap"),bs=num("boxScrap");
   const plan=bc>0?bc*35000:NaN,actual=q>0&&w>0?q*w:NaN,diff=Number.isFinite(plan)&&Number.isFinite(actual)?actual-plan:NaN,loss=Number.isFinite(diff)&&plan?diff/plan:NaN;
   const pass=p&&Number.isFinite(loss)?loss>=p.std:null;
   $("bulkPlan").textContent=Number.isFinite(plan)?fmt(plan)+" kg":"-"; $("bulkActual").textContent=Number.isFinite(actual)?fmt(actual)+" kg":"-";
@@ -95,8 +130,9 @@ function calculation(){
   $("stdHint").textContent=p?"Standard สูญเสีย: "+pct(p.std):"";
   $("status").className="status "+(pass===null?"wait":pass?"pass":"fail"); $("status").textContent=pass===null?"รอกรอกข้อมูล":pass?"✅ ผ่านมาตรฐาน":"🔴 เกินมาตรฐาน";
   const pr=q?ps/q:0,br=q?bs/(q/8):0,result=pass===null?"-":pass?"ผ่านมาตรฐาน":"เกินมาตรฐาน";
+  const batchLines=batches.length?batches.map((b,i)=>`${i+1}) Batch ${b.batchNo||"-"} → Mix Tank ${b.mixTankNo||"-"}`).join("\n"):"-";
   let msg="📊 รายงานจบการผลิต 1400\n";
-  msg+=`🏷 Product: ${p?p.short:"-"}\n📦 Batch: ${$("batch").value.trim()||"-"} | จำนวน Batch: ${bc||"-"}\n`;
+  msg+=`🏷 Product: ${p?p.short:"-"}\n📦 Batch / Mix Tank (${bc||0} Batch)\n${batchLines}\n`;
   msg+=`✅ ยอดผลิต: ${q?fmt(q,0):"-"} ชิ้น\n⚖️ น้ำหนักเฉลี่ย: ${w?fmt(w,3):"-"} kg/ชิ้น\n`;
   msg+=`🧪 Bulk ตามสูตร: ${Number.isFinite(plan)?fmt(plan):"-"} kg\n💧 Bulk ตามยอดผลิตจริง: ${Number.isFinite(actual)?fmt(actual):"-"} kg\n`;
   msg+=`📉 ส่วนต่าง Bulk: ${Number.isFinite(diff)?(diff>=0?"+":"")+fmt(diff):"-"} kg\n📌 % สูญเสีย: ${Number.isFinite(loss)?pct(loss):"-"} | Std: ${p?pct(p.std):"-"}\n`;
@@ -104,11 +140,11 @@ function calculation(){
   if($("remark").value.trim())msg+=`📝 หมายเหตุ: ${$("remark").value.trim()}\n`;
   msg+=`👤 ผู้รายงาน: ${$("reporter").value.trim()||"-"}`;
   $("preview").textContent=msg;
-  return {p,bc,q,w,ps,bs,plan,actual,diff,loss,pass,pr,br,msg};
+  return {p,batches,bc,q,w,ps,bs,plan,actual,diff,loss,pass,pr,br,msg};
 }
 function apiReady(){return cfg.apiUrl&&cfg.apiUrl.includes("/exec")&&!cfg.apiUrl.includes("PASTE_")}
 function recordId(){return "PC1400-"+Date.now()+"-"+Math.random().toString(36).slice(2,7).toUpperCase()}
-function fingerprint(){return [product()?.short,$("batch").value,num("batchCount"),num("qty"),weightKg(),num("pouchScrap"),num("boxScrap"),$("reporter").value].join("|")}
+function fingerprint(){return [product()?.short,JSON.stringify(getBatches()),num("qty"),weightKg(),num("pouchScrap"),num("boxScrap"),$("reporter").value].join("|")}
 function showSuccess(t){$("success").textContent=t;$("success").style.display="block";$("error").style.display="none"}
 function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1600)}
 
@@ -118,7 +154,7 @@ async function saveData(){
   const calc=calculation(),fp=fingerprint(),old=localStorage.getItem("pc1400_last_fp");
   if(old===fp&&localStorage.getItem("pc1400_last_id")){showSuccess("ข้อมูลชุดนี้บันทึกแล้ว: "+localStorage.getItem("pc1400_last_id"));return localStorage.getItem("pc1400_last_id")}
   const rid=recordId();
-  const payload={recordId:rid,product:calc.p.short,batch:$("batch").value.trim(),batchCount:calc.bc,qty:calc.q,avgWeight:calc.w,pouchScrap:calc.ps,boxScrap:calc.bs,remark:$("remark").value.trim(),reporter:$("reporter").value.trim()};
+  const payload={recordId:rid,product:calc.p.short,batches:calc.batches,batchCount:calc.bc,qty:calc.q,avgWeight:calc.w,pouchScrap:calc.ps,boxScrap:calc.bs,remark:$("remark").value.trim(),reporter:$("reporter").value.trim()};
   $("saveBtn").disabled=true;$("saveLineBtn").disabled=true;
   try{
     await fetch(cfg.apiUrl,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
@@ -127,10 +163,12 @@ async function saveData(){
   }finally{$("saveBtn").disabled=false;$("saveLineBtn").disabled=false}
 }
 ids.forEach(id=>$(id).addEventListener(id==="product"?"change":"input",()=>{$("success").style.display="none";calculation()}));
+$("addBatchBtn").onclick=()=>{addBatchRow();calculation()};
 $("saveBtn").onclick=async()=>{try{await saveData();toast("บันทึกข้อมูลแล้ว")}catch(e){}};
 $("saveLineBtn").onclick=async()=>{try{await saveData();location.href="https://line.me/R/share?text="+encodeURIComponent(calculation().msg)}catch(e){}};
 $("copyBtn").onclick=async()=>{if(!validate(true))return;const t=calculation().msg;try{await navigator.clipboard.writeText(t)}catch(e){const x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove()}toast("คัดลอกแล้ว")};
-$("resetBtn").onclick=()=>{const rep=$("reporter").value;ids.forEach(id=>$(id).value=(id==="pouchScrap"||id==="boxScrap")?"0":"");$("reporter").value=rep;localStorage.removeItem("pc1400_last_fp");localStorage.removeItem("pc1400_last_id");$("success").style.display="none";calculation()};
+$("resetBtn").onclick=()=>{const rep=$("reporter").value;ids.forEach(id=>$(id).value=(id==="pouchScrap"||id==="boxScrap")?"0":"");$("batchRows").innerHTML="";addBatchRow();$("reporter").value=rep;localStorage.removeItem("pc1400_last_fp");localStorage.removeItem("pc1400_last_id");$("success").style.display="none";calculation()};
+addBatchRow();
 calculation();
 </script>
 </body></html>
